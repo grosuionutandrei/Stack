@@ -29,7 +29,7 @@ class Stack<T> {
 
     public boolean contains(T t) {
         for (T z : stackMemory) {
-            if (z.hashCode() == z.hashCode()) {
+            if (z.hashCode() == t.hashCode()) {
                 return true;
             }
         }
