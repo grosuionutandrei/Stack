@@ -1,6 +1,5 @@
 package com.company.StackImplementation;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,9 +27,9 @@ class Stack<T> {
         return false;
     }
 
-    public boolean contains(Object o) {
-        for (Object obj : stackMemory) {
-            if (obj.hashCode() == o.hashCode()) {
+    public boolean contains(T t) {
+        for (T z : stackMemory) {
+            if (z.hashCode() == z.hashCode()) {
                 return true;
             }
         }
@@ -55,7 +54,7 @@ class Stack<T> {
 
     @Override
     public String toString() {
-        return "Atack{" +
+        return "Stack{" +
                 "stackMemory=" + stackMemory +
                 '}';
     }
