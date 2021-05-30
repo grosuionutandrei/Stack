@@ -1,0 +1,121 @@
+package org.cleancode.notes;
+
+
+import org.cleancode.CarModel;
+import org.cleancode.CarSearchCriteria;
+import org.cleancode.YearInterval;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class YearIntervalTestTest {
+
+
+
+ YearInterval yearInterval = Mockito.mock(YearInterval.class);
+
+ @Test
+ public void intersectTrue(){
+  CarModel car = new CarModel("Audi","R8", new YearInterval(2010,2020));
+  CarSearchCriteria carSearchCriteria1 = new CarSearchCriteria(new YearInterval(2009,2020),"Audi");
+  assertTrue(car.getYearInterval().intersect(carSearchCriteria1.getYearInterval()));
+ }
+
+ @Test
+ public void intersectFalseValuesInsideTheInterval(){
+  CarModel car = new CarModel("Audi","R8", new YearInterval(2010,2020));
+  CarSearchCriteria carSearchCriteria1 = new CarSearchCriteria(new YearInterval(2009,2019),"Audi");
+  assertTrue(car.getYearInterval().intersect(carSearchCriteria1.getYearInterval()));
+ }
+ @Test
+ public void intersectFalse(){
+  CarModel car = new CarModel("Audi","R8", new YearInterval(2021,2024));
+  CarSearchCriteria carSearchCriteria1 = new CarSearchCriteria(new YearInterval(2010,2020),"Audi");
+  System.out.println(car.getYearInterval());
+  assertFalse(car.getYearInterval().intersect(carSearchCriteria1.getYearInterval()));
+ }
+ @Test
+ public void intersectFalse1(){
+  CarModel car = new CarModel("Audi","R8", new YearInterval(0,0));
+  CarSearchCriteria carSearchCriteria1 = new CarSearchCriteria(new YearInterval(0,0),"Audi");
+  System.out.println(car.getYearInterval());
+  assertTrue(car.getYearInterval().intersect(carSearchCriteria1.getYearInterval()));
+ }
+
+
+ @Test
+ public void createObject(){
+  yearInterval=new YearInterval(1222,1223);
+  Assertions.assertEquals(1222,yearInterval.getStart());
+  assertEquals(1223,yearInterval.getEnd());
+ }
+
+ @Test
+ public void errorTestParametersZero(){
+
+  Throwable  exception = assertThrows(IllegalArgumentException.class, ()->new YearInterval(0,0) );
+  String message = "start > end";
+  assertEquals( message ,exception.getMessage());
+ }
+ @Test
+ public void errorTestParameterNormal(){
+  Throwable  exception = assertThrows(IllegalArgumentException.class, ()->new YearInterval(2010,2015) );
+  String message = "start > end";
+  assertEquals(message ,exception.getMessage());
+ }
+ @Test
+ public void errorTestParametersWrong(){
+  Throwable  exception = assertThrows(IllegalArgumentException.class, ()->new YearInterval(3050,2010));
+  String message = "start > end";
+  assertEquals( message ,exception.getMessage());
+ }
+ @Test
+ public void errorTestParameterSecondZero(){
+  Throwable exception = assertThrows(IllegalArgumentException.class,()->new YearInterval(2010,0));
+  String message = "start > end";
+  assertEquals(message,exception.getMessage());
+ }
+ @Test
+ public void errorTestParameterFirstZero(){
+  Throwable exception = assertThrows(IllegalArgumentException.class,()->new YearInterval(0,2010));
+  String message = "start > end";
+  assertEquals(message,exception.getMessage());
+ }
+
+
+@Test
+public List<CarModel> filterCarModels(CarSearchCriteria criteria, List<CarModel> carModels) {
+  List<CarModel> filteredCarModels = new ArrayList<>();
+ for (int i=0;i<carModels.size();i++) {
+  if (carModels.get(i).getYearInterval().intersect(criteria.getYearInterval())) {
+   filteredCarModels.add(carModels.get(i));
+  }
+ }
+ return filteredCarModels;
+}
+
+ @Test
+ public void testTrueReturnedList(){
+  List<CarModel> carModels1 = new ArrayList<>();
+  List<CarModel> carModels2 = new ArrayList<>();
+  CarSearchCriteria criteria = new CarSearchCriteria(new YearInterval(2014, 2016), "Ford");
+  CarModel fordFocusMk2 = new CarModel("Ford", "Focus", new YearInterval(2012, 2016));
+  CarModel opelAstra = new CarModel("Opel", "Astra", new YearInterval(2010, 2013));
+  carModels1.add(fordFocusMk2);
+  Collections.addAll(carModels2,fordFocusMk2,opelAstra);
+  assertEquals(carModels1, filterCarModels(criteria,carModels2));
+ }
+
+
+
+
+
+}
